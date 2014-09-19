@@ -50,18 +50,10 @@ Sudoku.BoardBuilder = (function (boardValues){
   }
 
   return { buildBoard: populateBoard(boardValues) }
-})
+})(easyGame)
 
 
 Sudoku.Solver = function(board) {
-  (function changeZeroesToOnes() {
-    board.forEach(function(cell) {
-      if (cell.originalValue === 0) {
-        cell.currentValue++
-      }
-    })
-  })()
-
   function isValueIn(category, value) {
     Sudoku.board.forEach(function(otherCell){
       if (otherCell[category] === cell[category]) {
@@ -105,7 +97,8 @@ Sudoku.Solver = function(board) {
   //all knowing function
   function solveBoard(board, index) {
     var index = index || 0
-    for (var i = 0; i < board.length-1; i++){
+    for (var i = 0; i < board.length-1; i++) {
+      var cell = board[i]
       if (cell.originalValue === 0) {
         cell.currentValue++
         while(!possibleValue(cell)) {
@@ -122,10 +115,8 @@ Sudoku.Solver = function(board) {
     return board
   }
 
-  return { solve: solveBoard(board, index) }
-  }
+  return solveBoard(board)
 }
 
-// Sudoku.board = Sudoku.BoardBuilder.buildBoard(easyGame)
-console.log("Hello")
-// Sudoku.Solver.solve(Sudoku.board)
+Sudoku.board = Sudoku.BoardBuilder.buildBoard
+console.log(Sudoku.Solver(Sudoku.board))
