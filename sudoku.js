@@ -117,3 +117,24 @@ Sudoku.board = Sudoku.BoardBuilder.buildBoard(easyGame)
 
 
 
+
+function isValueIn(category, value) {
+  Sudoku.board.forEach(function(otherCell){
+    if (otherCell[category] === cell[category]) {
+      if (otherCell.currentValue === value) {
+        return true
+      }
+    }
+  })
+  return false
+}
+
+function possibleValue(cell) {
+  var result =
+    (!isValueIn("row", cell.currentValue)) &&
+    (!isValueIn("column", cell.currentValue)) &&
+    (!isValueIn("box", cell.currentValue))
+    ? true : false
+
+  return result
+}
