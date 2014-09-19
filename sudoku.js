@@ -62,85 +62,70 @@ Sudoku.Solver = function(board) {
     })
   })()
 
-  function retreat(board) {
-    while(!valid) {
-          cell.currentValue++
-          valid = possibleValue(cell)
-          if (cell.currentValue > 9) {
-
-          }
+  function isValueIn(category, value) {
+    Sudoku.board.forEach(function(otherCell){
+      if (otherCell[category] === cell[category]) {
+        if (otherCell.currentValue === value) {
+          return true
         }
+      }
+    })
+    return false
+  }
+
+  function possibleValue(cell) {
+    var result =
+      (!isValueIn("row", cell.currentValue)) &&
+      (!isValueIn("column", cell.currentValue)) &&
+      (!isValueIn("box", cell.currentValue))
+      ? true : false
+
+    return result
+  }
+
+  function retreat(board, cell) {
+    var currentCell = board[cell.position-1]
+    if (currentCell.originalValue === 0) {
+      currentCell.currentValue++
+      while(!possibleValue(currentCell)) {
+        if (currentCell.currentValue > 9) {
+          currentCell.currentValue = 0
+          retreat(board, currentCell)
+        }
+        currentCell.currentValue++ 
+      }
+      // we found a potential value
+      // solveBoard(board, currentCell.position)
+      return currentCell.position
+    } else {
+      retreat(board, currentCell)
+    }
   }
 
   //all knowing function
-  function solveBoard(board) {
-    board.forEach(function(cell, index) {
+  function solveBoard(board, index) {
+    var index = index || 0
+    for (var i = 0; i < board.length-1; i++){
       if (cell.originalValue === 0) {
-        retreat(board, index);
-      }
-    })
-  }
-
-  return { solve: solveBoard(board) }
-
-  }
-}
-
-Sudoku.board = Sudoku.BoardBuilder.buildBoard(easyGame)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function isValueIn(category, value) {
-  Sudoku.board.forEach(function(otherCell){
-    if (otherCell[category] === cell[category]) {
-      if (otherCell.currentValue === value) {
-        return true
+        cell.currentValue++
+        while(!possibleValue(cell)) {
+          if (cell.currentValue > 9) {
+            cell.currentValue = 0
+            i = retreat(board, cell)
+            break
+          } else {
+            cell.currentValue++
+          }
+        }
       }
     }
-  })
-  return false
+    return board
+  }
+
+  return { solve: solveBoard(board, index) }
+  }
 }
 
-function possibleValue(cell) {
-  var result =
-    (!isValueIn("row", cell.currentValue)) &&
-    (!isValueIn("column", cell.currentValue)) &&
-    (!isValueIn("box", cell.currentValue))
-    ? true : false
-
-  return result
-}
+// Sudoku.board = Sudoku.BoardBuilder.buildBoard(easyGame)
+console.log("Hello")
+// Sudoku.Solver.solve(Sudoku.board)
