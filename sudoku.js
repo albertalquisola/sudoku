@@ -2,7 +2,7 @@ var easyGame = '0030206009003050010018064000081029007000000080067082000026095008
 var mediumGame = '400000805030000000000700000020000060000080400000010000000603070500200000104000000'
 var hardGame = '850002400720000009004000000000107002305000900040000000000080070017000000000036040'
 
-var Sudoku = {board:[]}
+var Sudoku = {}
 
 function Cell(value, index) {
   this.position = index
@@ -29,7 +29,7 @@ Cell.prototype = {
   }
 }
 
-Sudoku.boardBuilder = (function (boardValues){
+Sudoku.BoardBuilder = (function (boardValues){
 
   function makeIntoArray(boardValuesString){
     return boardValues.split('')
@@ -49,8 +49,71 @@ Sudoku.boardBuilder = (function (boardValues){
     return cells
   }
 
-  return populateBoard(boardValues)
+  return { buildBoard: populateBoard(boardValues) }
 })
 
-Sudoku.board = Sudoku.boardBuilder(easyGame)
-console.log(Sudoku.board)
+
+Sudoku.Solver = function(board) {
+
+  (function changeZeroesToOnes() {
+    board.forEach(function(cell) {
+      if (cell.originalValue === 0) {
+        cell.currentValue++
+      }
+    })
+  })()
+
+  //all knowing function
+  function solveBoard(board) {
+    board.forEach(function(cell) {
+      if (cell.originalValue === 0) {
+
+          //pluck out the invalid value: cell.currentValue from cell.options
+          //return the position/index of the invalid cell
+        }
+      }
+    })
+  }
+
+  return { solve: solveBoard(board) }
+
+  }
+}
+
+Sudoku.board = Sudoku.BoardBuilder.buildBoard(easyGame)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
