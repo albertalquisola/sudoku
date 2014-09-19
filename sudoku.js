@@ -54,7 +54,6 @@ Sudoku.BoardBuilder = (function (boardValues){
 
 
 Sudoku.Solver = function(board) {
-
   (function changeZeroesToOnes() {
     board.forEach(function(cell) {
       if (cell.originalValue === 0) {
@@ -63,14 +62,21 @@ Sudoku.Solver = function(board) {
     })
   })()
 
+  function retreat(board) {
+    while(!valid) {
+          cell.currentValue++
+          valid = possibleValue(cell)
+          if (cell.currentValue > 9) {
+
+          }
+        }
+  }
+
   //all knowing function
   function solveBoard(board) {
-    board.forEach(function(cell) {
+    board.forEach(function(cell, index) {
       if (cell.originalValue === 0) {
-
-          //pluck out the invalid value: cell.currentValue from cell.options
-          //return the position/index of the invalid cell
-        }
+        retreat(board, index);
       }
     })
   }
