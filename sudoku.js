@@ -116,7 +116,13 @@ Sudoku.board = Sudoku.BoardBuilder.buildBoard(easyGame)
 
 
 
-
+for (var i = index - 1; i >= 0; i--) {
+  if board[i].originalValue === 0 {
+    while(!possibleValue) {
+      cell.currentValue++
+    }
+  }
+}
 
 function isValueIn(category, value) {
   Sudoku.board.forEach(function(otherCell){
