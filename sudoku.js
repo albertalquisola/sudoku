@@ -4,14 +4,15 @@ var hardGame = '8500024007200000090040000000001070023050009000400000000000800700
 
 var Sudoku = {}
 
+
 function Cell(value, index) {
   this.position = index
   this.row = this.rowFor(this.position)
   this.column = this.columnFor(this.position)
   this.box = this.boxFor(this.position)
   this.options = this.fillOptions()
-  this.originalValue = value
-  this.currentValue = value
+  this.originalValue = parseInt(value)
+  this.currentValue = parseInt(value)
 }
 
 Cell.prototype = {
@@ -50,28 +51,30 @@ Sudoku.BoardBuilder = (function (boardValues){
   }
 
   return { buildBoard: populateBoard(boardValues) }
-})(easyGame)
+})(hardGame)
 
 
 Sudoku.Solver = function(board) {
-  function isValueIn(category, value) {
+  function isValueIn(category, cell) {
+    var result = false
     Sudoku.board.forEach(function(otherCell){
       if (otherCell[category] === cell[category]) {
-        if (otherCell.currentValue === value) {
-          return true
+        if (otherCell.currentValue === cell.currentValue 
+            && otherCell.position !== cell.position) {
+          result = true
         }
       }
     })
-    return false
+    return result
   }
 
   function possibleValue(cell) {
     var result =
-      (!isValueIn("row", cell.currentValue)) &&
-      (!isValueIn("column", cell.currentValue)) &&
-      (!isValueIn("box", cell.currentValue))
+      (!isValueIn("row", cell)) &&
+      (!isValueIn("column", cell)) &&
+      (!isValueIn("box", cell))
       ? true : false
-
+    if (cell.currentValue > 9) { result = false }
     return result
   }
 
@@ -82,24 +85,22 @@ Sudoku.Solver = function(board) {
       while(!possibleValue(currentCell)) {
         if (currentCell.currentValue > 9) {
           currentCell.currentValue = 0
-          retreat(board, currentCell)
+          return retreat(board, currentCell)
         }
         currentCell.currentValue++ 
       }
-      // we found a potential value
-      // solveBoard(board, currentCell.position)
       return currentCell.position
     } else {
-      retreat(board, currentCell)
+     return retreat(board, currentCell)
     }
   }
 
   //all knowing function
   function solveBoard(board, index) {
     var index = index || 0
-    for (var i = 0; i < board.length-1; i++) {
+    for (var i = 0; i < board.length; i++) {
       var cell = board[i]
-      if (cell.originalValue === 0) {
+      if (parseInt(cell.originalValue) === 0) {
         cell.currentValue++
         while(!possibleValue(cell)) {
           if (cell.currentValue > 9) {
@@ -119,4 +120,12 @@ Sudoku.Solver = function(board) {
 }
 
 Sudoku.board = Sudoku.BoardBuilder.buildBoard
-Sudoku.Solver(Sudoku.board)
+var numbers = []
+Sudoku.Solver(Sudoku.board).forEach(function(cell, index) {
+  numbers.push(cell.currentValue)
+})
+
+for(var i = 0; i < 80; i+=9) {
+  var num = i + 9
+  console.log(numbers.slice(i,num))
+}
