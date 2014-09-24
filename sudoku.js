@@ -77,50 +77,6 @@ Sudoku.Solver = function(board) {
       console.log(result)
     return result
   }
-
-  function retreat(board, cell) {
-    var currentCell = board[cell.position-1]
-    if (currentCell.originalValue === 0) {
-      currentCell.currentValue++
-      while(!possibleValue(currentCell)) {
-        if (currentCell.currentValue > 9) {
-          currentCell.currentValue = 0
-          retreat(board, currentCell)
-        }
-        currentCell.currentValue++
-      }
-      // we found a potential value
-      // solveBoard(board, currentCell.position)
-      return currentCell.position
-    } else {
-      retreat(board, currentCell)
-    }
-  }
-
-  //all knowing function
-  function solveBoard(board, index) {
-    var index = index || 0
-    for (var i = 0; i < board.length-1; i++) {
-      var cell = board[i]
-      if (cell.originalValue === 0) {
-        cell.currentValue++
-        while(!possibleValue(cell)) {
-          if (cell.currentValue > 9) {
-            cell.currentValue = 0
-            i = retreat(board, cell)
-            break
-          } else {
-            cell.currentValue++
-          }
-        }
-      }
-    }
-    return board
-  }
-
-  return solveBoard(board)
 }
 
-Sudoku.board = Sudoku.BoardBuilder.buildBoard
-// console.log(Sudoku.board)
-Sudoku.Solver(Sudoku.board)
+Sudoku.board = Sudoku.BoardBuilder.buildBoard(easyGame)
