@@ -119,4 +119,4 @@ Sudoku.Solver = function(board) {
 }
 
 Sudoku.board = Sudoku.BoardBuilder.buildBoard
-console.log(Sudoku.Solver(Sudoku.board))
+Sudoku.Solver(Sudoku.board)
