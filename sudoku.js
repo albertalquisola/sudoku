@@ -36,6 +36,8 @@ Sudoku.BoardBuilder = (function (boardValues){
   }
 
   function cellify(value,idx){
+    var value = Number(value)
+    var idx = Number(idx)
     return new Cell(value, idx)
   }
 
@@ -54,24 +56,25 @@ Sudoku.BoardBuilder = (function (boardValues){
 
 
 Sudoku.Solver = function(board) {
-  function isValueIn(category, value) {
+  function isValueIn(category, cell) {
+    var result = false
     Sudoku.board.forEach(function(otherCell){
       if (otherCell[category] === cell[category]) {
-        if (otherCell.currentValue === value) {
-          return true
+        if (otherCell.currentValue === cell.currentValue) {
+          result = true
         }
       }
     })
-    return false
+    return result
   }
 
   function possibleValue(cell) {
     var result =
-      (!isValueIn("row", cell.currentValue)) &&
-      (!isValueIn("column", cell.currentValue)) &&
-      (!isValueIn("box", cell.currentValue))
+      (!isValueIn("row", cell)) &&
+      (!isValueIn("column", cell)) &&
+      (!isValueIn("box", cell))
       ? true : false
-
+      console.log(result)
     return result
   }
 
@@ -84,7 +87,7 @@ Sudoku.Solver = function(board) {
           currentCell.currentValue = 0
           retreat(board, currentCell)
         }
-        currentCell.currentValue++ 
+        currentCell.currentValue++
       }
       // we found a potential value
       // solveBoard(board, currentCell.position)
@@ -119,4 +122,5 @@ Sudoku.Solver = function(board) {
 }
 
 Sudoku.board = Sudoku.BoardBuilder.buildBoard
+// console.log(Sudoku.board)
 Sudoku.Solver(Sudoku.board)
