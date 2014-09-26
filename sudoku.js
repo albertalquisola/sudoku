@@ -1,9 +1,11 @@
-var easyGame    =  '003020600900305001001806400008102900700000008006708200002609500800203009005010300'
-var mediumGame  = '400000805030000000000700000020000060000080400000010000000603070500200000104000000'
-var hardGame    = '850002400720000009004000000000107002305000900040000000000080070017000000000036040'
-var extremeGame = '800000000003600000070090200050007000000045700000100030001000068008500010090000400'
-var Sudoku = {}
+var Sudoku = Sudoku || {}
 
+Sudoku.games = {
+  easy: '003020600900305001001806400008102900700000008006708200002609500800203009005010300',
+  medium: '290500007700000400004738012902003064800050070500067200309004005000080700087005109',
+  hard: '000689100800000029150000008403000050200005000090240801084700910500000060060410000',
+  extreme: '096040001100060004504810390007950043030080000405023018010630059059070830003590007'
+}
 
 function Cell(value, index) {
   this.position = index
@@ -30,7 +32,7 @@ Cell.prototype = {
   }
 }
 
-Sudoku.BoardBuilder = (function (boardValues){
+Sudoku.BoardBuilder = function (boardValues){
 
   function makeIntoArray(boardValuesString){
     return boardValues.split('')
@@ -50,9 +52,8 @@ Sudoku.BoardBuilder = (function (boardValues){
     return cells
   }
 
-  return { buildBoard: populateBoard(boardValues) }
-})(easyGame)
-
+  return populateBoard(boardValues)
+}
 
 Sudoku.Solver = function(board) {
   function isValueIn(category, cell) {
@@ -88,7 +89,7 @@ Sudoku.Solver = function(board) {
           return retreat(board, currentCell)
         }
         currentCell.currentValue++
-        displayBoard(board)
+        Sudoku.displayBoard(board)
       }
       return currentCell.position
     } else {
@@ -110,7 +111,7 @@ Sudoku.Solver = function(board) {
             break
           } else {
             cell.currentValue++
-            displayBoard(board)
+            Sudoku.displayBoard(board)
           }
         }
       }
@@ -121,10 +122,10 @@ Sudoku.Solver = function(board) {
   return solveBoard(board)
 }
 
-Sudoku.board = Sudoku.BoardBuilder.buildBoard
-var solution = Sudoku.Solver(Sudoku.board)
+// Sudoku.board = Sudoku.BoardBuilder.buildBoard
+// var solution = Sudoku.Solver(Sudoku.board)
 
-function displayBoard(board) {
+Sudoku.displayBoard = function(board) {
   var numbers = []
 
   board.forEach(function(cell) {
@@ -138,4 +139,4 @@ function displayBoard(board) {
   console.log('\n')
 }
 
-displayBoard(solution)
+// displayBoard(solution)
