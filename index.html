@@ -1,18 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Sudoku Solver</title>
     <link rel="stylesheet" type="text/css" href="reset.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script type="text/javascript" src="sudoku.js"></script>
   </head>
   <body>
-    <div id="controls">
-      <button class="solution-button" id="brute">Brute</button>
-      <button class="solution-button" id="fancy">Fancy</button>
-    </div>
-    <div id="container">
-      <canvas id="grid"></canvas>
-      <div id="progress"></div>
+    <div id='container'>
+      <div id='controls'>
+        <button class='difficulty-button' id='easy'>Easy</button>
+        <button class='difficulty-button' id='medium'>Medium</button>
+        <button class='difficulty-button' id='hard'>Hard</button>
+        <button class='difficulty-button' id='extreme'>Extreme</button>
+        <p id='current-game'></p>
+        <button id='solve'>Solve!</button>
+      </div>
+      <div id="metrics">
+        <div id="count">Iterations: </div>
+        <div id="time">Time: </div>
+        <div id="space">Space: </div>
+      </div>
+      <div id="board">
+        <canvas id="grid"></canvas>
+      </div>
+      <div id="progress">
+        
+      </div>
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="sudoku.js"></script>
+      <script type="text/javascript" src="app.js"></script>
     </div>
   </body>
 </html>
