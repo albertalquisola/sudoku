@@ -1,7 +1,7 @@
-var easyGame = '003020600900305001001806400008102900700000008006708200002609500800203009005010300'
-var mediumGame = '400000805030000000000700000020000060000080400000010000000603070500200000104000000'
-var hardGame = '850002400720000009004000000000107002305000900040000000000080070017000000000036040'
-
+var easyGame    =  '003020600900305001001806400008102900700000008006708200002609500800203009005010300'
+var mediumGame  = '400000805030000000000700000020000060000080400000010000000603070500200000104000000'
+var hardGame    = '850002400720000009004000000000107002305000900040000000000080070017000000000036040'
+var extremeGame = '800000000003600000070090200050007000000045700000100030001000068008500010090000400'
 var Sudoku = {}
 
 
@@ -51,7 +51,7 @@ Sudoku.BoardBuilder = (function (boardValues){
   }
 
   return { buildBoard: populateBoard(boardValues) }
-})(hardGame)
+})(easyGame)
 
 
 Sudoku.Solver = function(board) {
@@ -87,7 +87,8 @@ Sudoku.Solver = function(board) {
           currentCell.currentValue = 0
           return retreat(board, currentCell)
         }
-        currentCell.currentValue++ 
+        currentCell.currentValue++
+        displayBoard(board)
       }
       return currentCell.position
     } else {
@@ -109,6 +110,7 @@ Sudoku.Solver = function(board) {
             break
           } else {
             cell.currentValue++
+            displayBoard(board)
           }
         }
       }
@@ -120,12 +122,20 @@ Sudoku.Solver = function(board) {
 }
 
 Sudoku.board = Sudoku.BoardBuilder.buildBoard
-var numbers = []
-Sudoku.Solver(Sudoku.board).forEach(function(cell, index) {
-  numbers.push(cell.currentValue)
-})
+var solution = Sudoku.Solver(Sudoku.board)
 
-for(var i = 0; i < 80; i+=9) {
-  var num = i + 9
-  console.log(numbers.slice(i,num))
+function displayBoard(board) {
+  var numbers = []
+
+  board.forEach(function(cell) {
+    numbers.push(cell.currentValue)
+  })
+
+  for(var index = 0; index < 80; index+=9) {
+    var num = index + 9
+    console.log(numbers.slice(index,num))
+  }
+  console.log('\n')
 }
+
+displayBoard(solution)
