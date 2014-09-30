@@ -5,7 +5,10 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="http://fb.me/react-0.11.2.js"></script>
     <script src="http://fb.me/JSXTransformer-0.11.2.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
     <!-- <script type="text/javascript" src="sudoku.js"></script> -->
+    <script src="./sudoku_model.js"></script>
   </head>
   <body>
     <div id="sudoku">
@@ -13,20 +16,28 @@
     <script type="text/jsx">
     /** @jsx React.DOM */
 
-
     var sudoku = React.createClass({
-      getInitialState: function(){
-        return {data: '45252425764'}
+      initiateGame: function(boardString) {
+        test.set({name:boardString})
+        //populate models
       },
-      // componentDidMount: function(){
-      //   this.setState({data: this.props.data})
-      // },
+
+      getInitialState: function(){
+        return {data: 'whatevs'}
+      },
+
+      componentDidMount: function(){
+        test.on('change:name',function(){
+          this.setState({data: test.get("name")})
+        }.bind(this))
+      },
 
       render: function(){
         return (
           <div>
             <h1>Sudoku</h1>
-            <sudokuBar data={this.props.data} />
+            <sudokuBar data={this.state.data} />
+            <sudokuForm onGameSubmit={this.initiateGame} />
           </div>
         )
       }
@@ -40,8 +51,27 @@
       }
     })
 
+    var sudokuForm = React.createClass({
+      handleSubmit: function(event) {
+        event.preventDefault()
+        var sudokuGame = this.refs.sudokuGame.getDOMNode().value.trim()
+        if (!sudokuGame) return
+        this.props.onGameSubmit(sudokuGame)
+        this.refs.sudokuGame.getDOMNode().value = ''
+      },
+
+      render: function() {
+        return (
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" placeholder="enter sudoku game" ref="sudokuGame" />
+            <input type="submit" />
+          </form>
+        )
+      }
+    })
+
     React.renderComponent(
-      <sudoku data='new data'/>, document.getElementById('sudoku')
+      <sudoku />, document.getElementById('sudoku')
     )
     </script>
   </body>
