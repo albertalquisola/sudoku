@@ -19,14 +19,14 @@
         return {data: '45252425764'}
       },
       // componentDidMount: function(){
-
+      //   this.setState({data: this.props.data})
       // },
 
       render: function(){
         return (
           <div>
-          <h1>Sudoku</h1>
-          <sudokuBar data={this.state.data} />
+            <h1>Sudoku</h1>
+            <sudokuBar data={this.props.data} />
           </div>
         )
       }
@@ -41,7 +41,7 @@
     })
 
     React.renderComponent(
-      <sudoku />, document.getElementById('sudoku')
+      <sudoku data='new data'/>, document.getElementById('sudoku')
     )
     </script>
   </body>

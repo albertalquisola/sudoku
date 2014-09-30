@@ -23,7 +23,8 @@ Cell.prototype = {
     return idx % 9
   },
   boxFor: function(idx) {
-    return (Math.floor(this.columnFor(idx)/3)) + (Math.floor((this.rowFor(idx) / 3)) * 3)
+    return (Math.floor(this.columnFor(idx)/3)) +
+           (Math.floor((this.rowFor(idx) / 3)) * 3)
   },
   fillOptions: function() {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -51,7 +52,7 @@ Sudoku.BoardBuilder = (function (boardValues){
   }
 
   return { buildBoard: populateBoard(boardValues) }
-})(easyGame)
+})(extremeGame)
 
 
 Sudoku.Solver = function(board) {
@@ -122,7 +123,7 @@ Sudoku.Solver = function(board) {
 Sudoku.board = Sudoku.BoardBuilder.buildBoard
 var solution = Sudoku.Solver(Sudoku.board)
 
-function displayBoard(board) {
+Sudoku.displayBoard = function(board) {
   var numbers = []
 
   board.forEach(function(cell) {
@@ -136,4 +137,4 @@ function displayBoard(board) {
   console.log('\n')
 }
 
-displayBoard(solution)
+Sudoku.displayBoard(solution)
