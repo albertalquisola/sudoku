@@ -3,16 +3,47 @@
   <head>
     <link rel="stylesheet" type="text/css" href="reset.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script type="text/javascript" src="sudoku.js"></script>
+    <script src="http://fb.me/react-0.11.2.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.11.2.js"></script>
+    <!-- <script type="text/javascript" src="sudoku.js"></script> -->
   </head>
   <body>
-    <div id="controls">
-      <button class="solution-button" id="brute">Brute</button>
-      <button class="solution-button" id="fancy">Fancy</button>
+    <div id="sudoku">
     </div>
-    <div id="container">
-      <canvas id="grid"></canvas>
-      <div id="progress"></div>
-    </div>
+    <script type="text/jsx">
+    /** @jsx React.DOM */
+
+
+    var sudoku = React.createClass({
+      getInitialState: function(){
+        return {data: '45252425764'}
+      },
+      // componentDidMount: function(){
+
+      // },
+
+      render: function(){
+        return (
+          <div>
+          <h1>Sudoku</h1>
+          <sudokuBar data={this.state.data} />
+          </div>
+        )
+      }
+    })
+
+    var sudokuBar = React.createClass({
+      render: function() {
+        return (
+          <p>{this.props.data}</p>
+        )
+      }
+    })
+
+    React.renderComponent(
+      <sudoku />, document.getElementById('sudoku')
+    )
+    </script>
   </body>
 </html>
+
