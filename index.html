@@ -7,8 +7,10 @@
     <script src="http://fb.me/JSXTransformer-0.11.2.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
-    <!-- <script type="text/javascript" src="sudoku.js"></script> -->
+    <script type="text/javascript" src="sudoku.js"></script>
+<!-- 
     <script src="./sudoku_model.js"></script>
+     -->
   </head>
   <body>
     <div id="sudoku">
@@ -17,19 +19,37 @@
     /** @jsx React.DOM */
 
     var sudoku = React.createClass({
+      stringifyBoard: function(board) {
+        var boardString = ""
+        board.models.forEach(function(cell){
+          boardString += cell.attributes.currentValue
+        })
+        console.log(boardString)
+        return boardString
+      },
+
       initiateGame: function(boardString) {
-        test.set({name:boardString})
-        //populate models
+        Sudoku.board = Sudoku.BoardBuilder(boardString).buildBoard
+        Sudoku.board.on('change', function(){
+          console.log("fuch you kouch")
+          var boardString = this.stringifyBoard(Sudoku.board)
+          // console.log(boardString)
+          this.setState({data: boardString})
+        }.bind(this))
+        var solution = Sudoku.Solver(Sudoku.board)
+        console.log(Sudoku.board)
+        // var boardString = this.stringifyBoard(Sudoku.board)
+        // this.setState({data: boardString})
+        // console.log(Sudoku.board)
+        // debugger
       },
 
       getInitialState: function(){
-        return {data: 'whatevs'}
+        return {data: 'Waiting for a game string'}
       },
 
       componentDidMount: function(){
-        test.on('change:name',function(){
-          this.setState({data: test.get("name")})
-        }.bind(this))
+
       },
 
       render: function(){
@@ -64,7 +84,7 @@
         return (
           <form onSubmit={this.handleSubmit}>
             <input type="text" placeholder="enter sudoku game" ref="sudokuGame" />
-            <input type="submit" />
+            <input type="submit" value="Solve!" />
           </form>
         )
       }

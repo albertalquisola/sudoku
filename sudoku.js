@@ -1,4 +1,4 @@
-var easyGame    =  '003020600900305001001806400008102900700000008006708200002609500800203009005010300'
+var easyGame    = '003020600900305001001806400008102900700000008006708200002609500800203009005010300'
 var mediumGame  = '400000805030000000000700000020000060000080400000010000000603070500200000104000000'
 var hardGame    = '850002400720000009004000000000107002305000900040000000000080070017000000000036040'
 var extremeGame = '800000000003600000070090200050007000000045700000100030001000068008500010090000400'
@@ -38,10 +38,10 @@ var Cell = Backbone.Model.extend({
 })
 
 var Board = Backbone.Collection.extend({
-  model: Cell
+  model: Cell,            
 })
 
-Sudoku.BoardBuilder = (function (boardValues){
+Sudoku.BoardBuilder = function (boardValues){
 
   function makeIntoArray(boardValuesString){
     return boardValues.split('')
@@ -68,7 +68,7 @@ Sudoku.BoardBuilder = (function (boardValues){
   }
 
   return { buildBoard: populateBoard(boardValues) }
-})(easyGame)
+}
 
 Sudoku.Solver = function(board) {
   function isValueIn(category, cell) {
@@ -97,13 +97,13 @@ Sudoku.Solver = function(board) {
   function retreat(board, cell) {
     var currentCell = board.models[cell.attributes.position-1]
     if (currentCell.attributes.originalValue === 0) {
-      currentCell.attributes.currentValue++
+      currentCell.set({currentValue: currentCell.get("currentValue") + 1})
       while(!possibleValue(currentCell)) {
         if (currentCell.attributes.currentValue > 9) {
-          currentCell.attributes.currentValue = 0
+          currentCell.set({currentValue: 0})
           return retreat(board, currentCell)
         }
-        currentCell.attributes.currentValue++
+        currentCell.set({currentValue: currentCell.get("currentValue") + 1})
       }
       return currentCell.attributes.position
     } else {
@@ -135,7 +135,6 @@ Sudoku.Solver = function(board) {
   return solveBoard(board)
 }
 
-Sudoku.board = Sudoku.BoardBuilder.buildBoard
-var solution = Sudoku.Solver(Sudoku.board)
 
-Sudoku.displayBoard(solution)
+
+// Sudoku.displayBoard(solution)
