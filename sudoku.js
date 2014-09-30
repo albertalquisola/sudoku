@@ -59,7 +59,7 @@ Sudoku.Solver = function(board) {
     var result = false
     Sudoku.board.forEach(function(otherCell){
       if (otherCell[category] === cell[category]) {
-        if (otherCell.currentValue === cell.currentValue 
+        if (otherCell.currentValue === cell.currentValue
             && otherCell.position !== cell.position) {
           result = true
         }
@@ -88,7 +88,6 @@ Sudoku.Solver = function(board) {
           return retreat(board, currentCell)
         }
         currentCell.currentValue++
-        displayBoard(board)
       }
       return currentCell.position
     } else {
@@ -110,7 +109,6 @@ Sudoku.Solver = function(board) {
             break
           } else {
             cell.currentValue++
-            displayBoard(board)
           }
         }
       }
