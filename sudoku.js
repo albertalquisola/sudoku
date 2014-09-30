@@ -4,32 +4,42 @@ var hardGame    = '8500024007200000090040000000001070023050009000400000000000800
 var extremeGame = '800000000003600000070090200050007000000045700000100030001000068008500010090000400'
 var Sudoku = {}
 
+Sudoku.displayBoard = function(board) {
+  var numbers = []
 
-function Cell(value, index) {
-  this.position = index
-  this.row = this.rowFor(this.position)
-  this.column = this.columnFor(this.position)
-  this.box = this.boxFor(this.position)
-  this.options = this.fillOptions()
-  this.originalValue = parseInt(value)
-  this.currentValue = parseInt(value)
-}
+  board.forEach(function(cell) {
+    numbers.push(cell.attributes.currentValue)
+  })
 
-Cell.prototype = {
-  rowFor: function(idx) {
-    return  Math.floor(idx / 9)
-  },
-  columnFor: function(idx) {
-    return idx % 9
-  },
-  boxFor: function(idx) {
-    return (Math.floor(this.columnFor(idx)/3)) +
-           (Math.floor((this.rowFor(idx) / 3)) * 3)
-  },
-  fillOptions: function() {
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  for(var index = 0; index < 80; index+=9) {
+    var num = index + 9
+    console.log(numbers.slice(index,num))
   }
+  console.log('\n')
 }
+
+var Cell = Backbone.Model.extend({
+  initialize: function(){
+    this.attributes.row    = this.getRow();
+    this.attributes.column = this.getColumn();
+    this.attributes.box    = this.getBox();
+  },
+
+  getRow: function() {
+    return Math.floor(this.attributes.position / 9)
+  },
+  getColumn: function() {
+    return this.attributes.position % 9
+  },
+  getBox: function() {
+    return (Math.floor(this.getColumn() / 3)) +
+           (Math.floor((this.getRow() / 3)) * 3)
+  }
+})
+
+var Board = Backbone.Collection.extend({
+  model: Cell
+})
 
 Sudoku.BoardBuilder = (function (boardValues){
 
@@ -38,30 +48,35 @@ Sudoku.BoardBuilder = (function (boardValues){
   }
 
   function cellify(value,idx){
-    return new Cell(value, idx)
+    var val = parseInt(value)
+    var idx = parseInt(idx)
+    return new Cell({
+      originalValue: val,
+      currentValue: val,
+      position: idx
+    })
   }
 
   function populateBoard(boardValues){
-    var cells = []
+    var board = new Board()
     makeIntoArray(boardValues)
     .forEach(function(num,idx){
       var cell = cellify(num,idx)
-      cells.push(cell)
+      board.push(cell)
     })
-    return cells
+    return board
   }
 
   return { buildBoard: populateBoard(boardValues) }
-})(extremeGame)
-
+})(easyGame)
 
 Sudoku.Solver = function(board) {
   function isValueIn(category, cell) {
     var result = false
     Sudoku.board.forEach(function(otherCell){
-      if (otherCell[category] === cell[category]) {
-        if (otherCell.currentValue === cell.currentValue
-            && otherCell.position !== cell.position) {
+      if (otherCell.attributes[category] === cell.attributes[category]) {
+        if (otherCell.attributes.currentValue === cell.attributes.currentValue
+            && otherCell.attributes.position !== cell.attributes.position) {
           result = true
         }
       }
@@ -75,22 +90,22 @@ Sudoku.Solver = function(board) {
       (!isValueIn("column", cell)) &&
       (!isValueIn("box", cell))
       ? true : false
-    if (cell.currentValue > 9) { result = false }
+    if (cell.attributes.currentValue > 9) { result = false }
     return result
   }
 
   function retreat(board, cell) {
-    var currentCell = board[cell.position-1]
-    if (currentCell.originalValue === 0) {
-      currentCell.currentValue++
+    var currentCell = board.models[cell.attributes.position-1]
+    if (currentCell.attributes.originalValue === 0) {
+      currentCell.attributes.currentValue++
       while(!possibleValue(currentCell)) {
-        if (currentCell.currentValue > 9) {
-          currentCell.currentValue = 0
+        if (currentCell.attributes.currentValue > 9) {
+          currentCell.attributes.currentValue = 0
           return retreat(board, currentCell)
         }
-        currentCell.currentValue++
+        currentCell.attributes.currentValue++
       }
-      return currentCell.position
+      return currentCell.attributes.position
     } else {
      return retreat(board, currentCell)
     }
@@ -100,16 +115,16 @@ Sudoku.Solver = function(board) {
   function solveBoard(board, index) {
     var index = index || 0
     for (var i = 0; i < board.length; i++) {
-      var cell = board[i]
-      if (parseInt(cell.originalValue) === 0) {
-        cell.currentValue++
+      var cell = board.models[i]
+      if (cell.attributes.originalValue === 0) {
+        cell.attributes.currentValue++
         while(!possibleValue(cell)) {
-          if (cell.currentValue > 9) {
-            cell.currentValue = 0
+          if (cell.attributes.currentValue > 9) {
+            cell.attributes.currentValue = 0
             i = retreat(board, cell)
             break
           } else {
-            cell.currentValue++
+            cell.attributes.currentValue++
           }
         }
       }
@@ -122,19 +137,5 @@ Sudoku.Solver = function(board) {
 
 Sudoku.board = Sudoku.BoardBuilder.buildBoard
 var solution = Sudoku.Solver(Sudoku.board)
-
-Sudoku.displayBoard = function(board) {
-  var numbers = []
-
-  board.forEach(function(cell) {
-    numbers.push(cell.currentValue)
-  })
-
-  for(var index = 0; index < 80; index+=9) {
-    var num = index + 9
-    console.log(numbers.slice(index,num))
-  }
-  console.log('\n')
-}
 
 Sudoku.displayBoard(solution)
