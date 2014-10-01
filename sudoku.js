@@ -2,22 +2,8 @@ var easyGame    =  '003020600900305001001806400008102900700000008006708200002609
 var mediumGame  = '400000805030000000000700000020000060000080400000010000000603070500200000104000000'
 var hardGame    = '850002400720000009004000000000107002305000900040000000000080070017000000000036040'
 var extremeGame = '800000000003600000070090200050007000000045700000100030001000068008500010090000400'
-var Sudoku = {}
 
-Sudoku.displayBoard = function(board) {
-  var numbers = []
-
-  board.forEach(function(cell) {
-    numbers.push(cell.attributes.currentValue)
-  })
-
-  for(var index = 0; index < 80; index+=9) {
-    var num = index + 9
-    console.log(numbers.slice(index,num))
-  }
-  console.log('\n')
-}
-
+//Backbone model and collection classes
 var Cell = Backbone.Model.extend({
   initialize: function(){
     this.attributes.row    = this.getRow();
@@ -41,9 +27,12 @@ var Board = Backbone.Collection.extend({
   model: Cell
 })
 
-Sudoku.BoardBuilder = (function (boardValues){
+//Sudoku namespaced object
+var Sudoku = {}
 
-  function makeIntoArray(boardValuesString){
+Sudoku.buildBoard = function (boardValues){
+
+  function makeIntoArray(){
     return boardValues.split('')
   }
 
@@ -67,21 +56,34 @@ Sudoku.BoardBuilder = (function (boardValues){
     return board
   }
 
-  return { buildBoard: populateBoard(boardValues) }
-})(easyGame)
+  return populateBoard(boardValues)
+}
 
 Sudoku.Solver = function(board) {
   function isValueIn(category, cell) {
     var result = false
+
     Sudoku.board.forEach(function(otherCell){
-      if (otherCell.attributes[category] === cell.attributes[category]) {
-        if (otherCell.attributes.currentValue === cell.attributes.currentValue
-            && otherCell.attributes.position !== cell.attributes.position) {
-          result = true
+      if (categoryMatches(category,cell,otherCell)) {
+        if (valueMatches(cell, otherCell) &&
+            notSameCell(cell, otherCell)) {
+              result = true
         }
       }
     })
     return result
+  }
+
+  function categoryMatches(category, cell, comparingCell) {
+    return comparingCell.attributes[category] === cell.attributes[category]
+  }
+
+  function valueMatches(cell, comparingCell) {
+    return comparingCell.attributes.currentValue === cell.attributes.currentValue
+  }
+
+  function notSameCell(cell, comparingCell) {
+    return comparingCell.attributes.position !== cell.attributes.position
   }
 
   function possibleValue(cell) {
@@ -135,7 +137,21 @@ Sudoku.Solver = function(board) {
   return solveBoard(board)
 }
 
-Sudoku.board = Sudoku.BoardBuilder.buildBoard
+Sudoku.displayBoard = function(board) {
+  var numbers = []
+
+  board.forEach(function(cell) {
+    numbers.push(cell.attributes.currentValue)
+  })
+
+  for(var index = 0; index < 81; index+=9) {
+    var num = index + 9
+    console.log(numbers.slice(index,num))
+  }
+  console.log('\n')
+}
+
+Sudoku.board = Sudoku.buildBoard(easyGame)
 var solution = Sudoku.Solver(Sudoku.board)
 
 Sudoku.displayBoard(solution)
