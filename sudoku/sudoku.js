@@ -3,31 +3,7 @@ var mediumGame  = '4000008050300000000007000000200000600000804000000100000006030
 var hardGame    = '850002400720000009004000000000107002305000900040000000000080070017000000000036040'
 var extremeGame = '800000000003600000070090200050007000000045700000100030001000068008500010090000400'
 
-//Backbone model and collection classes
-var Cell = Backbone.Model.extend({
-  initialize: function(){
-    this.attributes.row    = this.getRow();
-    this.attributes.column = this.getColumn();
-    this.attributes.box    = this.getBox();
-  },
-
-  getRow: function() {
-    return Math.floor(this.attributes.position / 9)
-  },
-  getColumn: function() {
-    return this.attributes.position % 9
-  },
-  getBox: function() {
-    return (Math.floor(this.getColumn() / 3)) +
-           (Math.floor((this.getRow() / 3)) * 3)
-  }
-})
-
-var Board = Backbone.Collection.extend({
-  model: Cell
-})
-
-//Sudoku namespaced object
+//Sudoku namespaced main object
 var Sudoku = {}
 
 Sudoku.buildBoard = function (boardValues){
@@ -60,19 +36,6 @@ Sudoku.buildBoard = function (boardValues){
 }
 
 Sudoku.Solver = function(board) {
-  function isValueIn(category, cell) {
-    var result = false
-
-    Sudoku.board.forEach(function(otherCell){
-      if (categoryMatches(category,cell,otherCell)) {
-        if (valueMatches(cell, otherCell) &&
-            notSameCell(cell, otherCell)) {
-              result = true
-        }
-      }
-    })
-    return result
-  }
 
   function categoryMatches(category, cell, comparingCell) {
     return comparingCell.attributes[category] === cell.attributes[category]
@@ -88,11 +51,25 @@ Sudoku.Solver = function(board) {
 
   function possibleValue(cell) {
     var result =
-      (!isValueIn("row", cell)) &&
-      (!isValueIn("column", cell)) &&
-      (!isValueIn("box", cell))
-      ? true : false
-    if (cell.attributes.currentValue > 9) { result = false }
+      ifValueIsIn("row", cell) ||
+      ifValueIsIn("column", cell) ||
+      ifValueIsIn("box", cell)
+      ? false : true
+    if (cell.attributes.currentValue > 9) result = false
+    return result
+  }
+
+  function ifValueIsIn(category, cell) {
+    var result = false
+
+    Sudoku.board.forEach(function(otherCell){
+      if (categoryMatches(category,cell,otherCell)) {
+        if (valueMatches(cell, otherCell) &&
+            notSameCell(cell, otherCell)) {
+              result = true
+        }
+      }
+    })
     return result
   }
 
@@ -151,7 +128,7 @@ Sudoku.displayBoard = function(board) {
   console.log('\n')
 }
 
-Sudoku.board = Sudoku.buildBoard(easyGame)
+Sudoku.board = Sudoku.buildBoard(extremeGame)
 var solution = Sudoku.Solver(Sudoku.board)
 
 Sudoku.displayBoard(solution)
