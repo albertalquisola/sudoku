@@ -1,4 +1,4 @@
-Sudoku.buildBoard = function (boardValues){
+Sudoku.buildBoard = function (boardValues,board){
 
   function makeIntoArray(){
     return boardValues.split('')
@@ -7,15 +7,14 @@ Sudoku.buildBoard = function (boardValues){
   function cellify(value,idx){
     var val = parseInt(value)
     var idx = parseInt(idx)
-    return new Cell({
+    return new app.Models.Cell({
       originalValue: val,
       currentValue: val,
       position: idx
     })
   }
 
-  function populateBoard(boardValues){
-    var board = new Board()
+  function populateBoard(boardValues, board){
     makeIntoArray(boardValues).forEach(function(num,idx){
       var cell = cellify(num,idx)
       board.push(cell)
@@ -23,9 +22,5 @@ Sudoku.buildBoard = function (boardValues){
     return board
   }
 
-  function assignBoard(board,callback) {
-    Sudoku.board = board
-  }
-
-  return populateBoard(boardValues)
+  return populateBoard(boardValues,board)
 }
