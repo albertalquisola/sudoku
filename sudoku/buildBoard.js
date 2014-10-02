@@ -17,7 +17,7 @@ Sudoku.buildBoard = function (boardValues,board){
   function populateBoard(boardValues, board){
     makeIntoArray(boardValues).forEach(function(num,idx){
       var cell = cellify(num,idx)
-      board.push(cell)
+      board.add([cell])
     })
     return board
   }

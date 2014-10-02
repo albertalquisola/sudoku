@@ -9,8 +9,7 @@ app.Views.App = React.createClass({
 
   startGame: function(game) {
     var board = this.getCollection()
-    this.populateBoard(game,board.models)
-    console.log(board)
+    this.populateBoard(game,board)
   },
 
   populateBoard: function(game,board) {
@@ -18,13 +17,15 @@ app.Views.App = React.createClass({
   },
 
   render: function() {
+    console.log(this.props.collection)
     return (
       <div>
-        <app.Views.SudokuBoard />
+        <h1>003020600900305001001806400008102900700000008006708200002609500800203009005010300</h1>
+        <app.Views.SudokuBoard collection={this.props.collection} />
         <app.Views.InputBox startGame={this.startGame} />
       </div>
     )
   }
 })
 
-React.renderComponent(<app.Views.App collection={new app.Collections.Board}/>, document.getElementById('sudoku'))
+React.renderComponent(<app.Views.App collection={new app.Collections.Board()} data="this is data" />, document.getElementById('sudoku'))

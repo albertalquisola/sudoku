@@ -14,5 +14,13 @@ app.Models.Cell = Backbone.Model.extend({
   getBox: function() {
     return (Math.floor(this.getColumn() / 3)) +
            (Math.floor((this.getRow() / 3)) * 3)
+  },
+  incrementByOne: function() {
+    var currentValue = this.attributes.currentValue
+    this.set({currentValue : currentValue + 1})
+  },
+
+  resetToZero: function() {
+    this.set({currentValue: 0})
   }
 })

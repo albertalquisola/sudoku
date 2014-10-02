@@ -6,11 +6,16 @@ app.Views.SudokuBoard = React.createClass({displayName: 'SudokuBoard',
   },
 
   render: function() {
-    // var numbers = this.state.forEach(function(number){
-    //   return <SudokuCell number={number} />
-    // })
+    var numbers = []
+
+    if (this.props.collection) {
+      numbers = this.props.collection.map(function(cell) {
+        return app.Views.Cell({number: cell.currentValue})
+      })
+    }
+
     return (
-      React.DOM.div(null, "hello")
+      React.DOM.div(null, numbers)
     )
   }
 })
