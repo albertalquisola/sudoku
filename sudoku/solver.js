@@ -17,24 +17,23 @@ Sudoku.solve = function(board, display) {
     var result = false
 
     Sudoku.board.forEach(function(otherCell){
-      if (
-        categoryMatches(category,cell,otherCell) &&
-        valueMatches(cell, otherCell) &&
-        notSameCell(cell, otherCell) ) {
-          result = true
+      if (categoryMatches(category,cell,otherCell) &&
+          valueMatches(cell, otherCell) &&
+          notSameCell(cell, otherCell) ) {
+            result = true
         }
     })
     return result
   }
 
   function possibleValue(cell) {
-    var result =
+    var possibleValue =
       ifValueIsIn("row", cell) ||
       ifValueIsIn("column", cell) ||
       ifValueIsIn("box", cell)
       ? false : true
-    if (cell.attributes.currentValue > 9) result = false
-    return result
+    if (cell.attributes.currentValue > 9) possibleValue = false
+    return possibleValue
   }
 
   function retreat(board, cell) {

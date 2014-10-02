@@ -34,7 +34,7 @@
       },
 
       componentDidMount: function() {
-        app.Board.on('change', this.setState)
+
       },
 
       render: function() {

@@ -1,5 +1,4 @@
-//Backbone model and collection classes
-var Cell = Backbone.Model.extend({
+var app.Models.Cell = Backbone.Model.extend({
   initialize: function(){
     this.attributes.row    = this.getRow();
     this.attributes.column = this.getColumn();

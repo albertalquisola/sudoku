@@ -1,3 +1,3 @@
-var Board = Backbone.Collection.extend({
+var app.Collections.Board = Backbone.Collection.extend({
   model: Cell
 })
