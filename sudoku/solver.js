@@ -1,4 +1,4 @@
-Sudoku.solve = function(board, display) {
+Sudoku.solve = function(board) {
 
   function categoryMatches(category, cell, comparingCell) {
     return comparingCell.attributes[category] === cell.attributes[category]
@@ -16,7 +16,7 @@ Sudoku.solve = function(board, display) {
   function ifValueIsIn(category, cell) {
     var result = false
 
-    Sudoku.board.forEach(function(otherCell){
+    board.models.forEach(function(otherCell){
       if (categoryMatches(category,cell,otherCell) &&
           valueMatches(cell, otherCell) &&
           notSameCell(cell, otherCell) ) {
@@ -39,13 +39,13 @@ Sudoku.solve = function(board, display) {
   function retreat(board, cell) {
     var currentCell = board.models[cell.attributes.position-1]
     if (currentCell.attributes.originalValue === 0) {
-      currentCell.attributes.currentValue++
+      currentCell.incrementByOne()
       while(!possibleValue(currentCell)) {
         if (currentCell.attributes.currentValue > 9) {
           currentCell.attributes.currentValue = 0
           return retreat(board, currentCell)
         }
-        currentCell.attributes.currentValue++
+        currentCell.incrementByOne()
       }
       return currentCell.attributes.position
     } else {
@@ -54,7 +54,7 @@ Sudoku.solve = function(board, display) {
   }
 
   //all knowing function
-  function solveBoard(board, index) {
+  function solveBoard(boarder, index) {
     var index = index || 0
     for (var i = 0; i < board.length; i++) {
       var cell = board.models[i]

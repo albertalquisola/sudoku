@@ -8,20 +8,25 @@ app.Views.App = React.createClass({displayName: 'App',
   mixins: [Backbone.React.Component.mixin],
 
   startGame: function(game) {
+    this.getCollection().reset()
     var board = this.getCollection()
     this.populateBoard(game,board)
+    this.solveGame(board)
   },
 
   populateBoard: function(game,board) {
     return Sudoku.buildBoard(game,board)
   },
 
+  solveGame: function(board) {
+    Sudoku.solve(board)
+  },
+
   render: function() {
-    console.log(this.props.collection)
     return (
       React.DOM.div(null, 
         React.DOM.h1(null, "003020600900305001001806400008102900700000008006708200002609500800203009005010300"), 
-        app.Views.SudokuBoard({collection: this.props.collection}), 
+        app.Views.SudokuBoard({board: this.props.collection}), 
         app.Views.InputBox({startGame: this.startGame})
       )
     )

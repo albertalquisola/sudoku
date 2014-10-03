@@ -1,5 +1,4 @@
 /** @jsx React.DOM */
-
 app.Views.InputBox = React.createClass({displayName: 'InputBox',
       handleSubmit: function(event) {
         event.preventDefault()
