@@ -15,17 +15,19 @@ app.Views.App = React.createClass({displayName: 'App',
   },
 
   populateBoard: function(game,board) {
-    return Sudoku.buildBoard(game,board)
+    Sudoku.buildBoard(game,board)
   },
 
   solveGame: function(board) {
     Sudoku.solve(board)
+
   },
 
   render: function() {
     return (
       React.DOM.div(null, 
-        React.DOM.h1(null, "003020600900305001001806400008102900700000008006708200002609500800203009005010300"), 
+        React.DOM.h1(null, "Sample Game"), 
+        React.DOM.p(null, "003020600900305001001806400008102900700000008006708200002609500800203009005010300"), 
         app.Views.SudokuBoard({board: this.props.collection}), 
         app.Views.InputBox({startGame: this.startGame})
       )
@@ -33,4 +35,4 @@ app.Views.App = React.createClass({displayName: 'App',
   }
 })
 
-React.renderComponent(app.Views.App({collection: new app.Collections.Board(), data: "this is data"}), document.getElementById('sudoku'))
+React.renderComponent(app.Views.App({collection: new app.Collections.Board()}), document.getElementById('sudoku'))

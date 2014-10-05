@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
 app.Views.SudokuBoard = React.createClass({
-
   render: function() {
     var numbers = []
 

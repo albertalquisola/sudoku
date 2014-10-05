@@ -59,14 +59,14 @@ Sudoku.solve = function(board) {
     for (var i = 0; i < board.length; i++) {
       var cell = board.models[i]
       if (cell.attributes.originalValue === 0) {
-        cell.attributes.currentValue++
+        cell.incrementByOne()
         while(!possibleValue(cell)) {
           if (cell.attributes.currentValue > 9) {
-            cell.attributes.currentValue = 0
+            cell.resetToZero()
             i = retreat(board, cell)
             break
           } else {
-            cell.attributes.currentValue++
+            cell.incrementByOne()
           }
         }
       }

@@ -5,7 +5,7 @@ Sudoku.displayBoard = function(board) {
     numbers.push(cell.attributes.currentValue)
   })
 
-  for(var index = 0; index < 81; index+=9) {
+  for (var index = 0; index < 81; index+=9) {
     var num = index + 9
     console.log(numbers.slice(index,num))
   }
